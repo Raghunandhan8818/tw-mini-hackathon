@@ -30,25 +30,25 @@ function RouteMap({ currentUser, selectedMatch }) {
                 });
 
                 // Create markers for pickup locations and office
-                const currentUserMarker = new google.maps.Marker({
-                    position: { lat: currentUser.pickupLocation.lat, lng: currentUser.pickupLocation.lng },
+                const driverMarker = new google.maps.Marker({
+                    position: { lat: selectedMatch.driverLocation.lat, lng: selectedMatch.driverLocation.lng },
                     map: mapInstance,
-                    title: 'Your Location',
-                    label: 'You'
+                    title: selectedMatch.isCurrentUserDriver ? 'You (Driver)' : `${selectedMatch.name} (Driver)`,
+                    label: 'D'
                 });
 
-                const matchMarker = new google.maps.Marker({
-                    position: { lat: selectedMatch.pickupLocation.lat, lng: selectedMatch.pickupLocation.lng },
+                const passengerMarker = new google.maps.Marker({
+                    position: { lat: selectedMatch.passengerLocation.lat, lng: selectedMatch.passengerLocation.lng },
                     map: mapInstance,
-                    title: selectedMatch.name,
-                    label: 'Match'
+                    title: selectedMatch.isCurrentUserDriver ? `${selectedMatch.name} (Passenger)` : 'You (Passenger)',
+                    label: 'P'
                 });
 
                 const officeMarker = new google.maps.Marker({
                     position: { lat: OFFICE_LOCATION.lat, lng: OFFICE_LOCATION.lng },
                     map: mapInstance,
                     title: 'Office',
-                    label: 'Office'
+                    label: 'O'
                 });
 
                 // Create a DirectionsService object
@@ -64,11 +64,11 @@ function RouteMap({ currentUser, selectedMatch }) {
 
                 // Calculate the route
                 directionsService.route({
-                    origin: { lat: currentUser.pickupLocation.lat, lng: currentUser.pickupLocation.lng },
+                    origin: { lat: selectedMatch.driverLocation.lat, lng: selectedMatch.driverLocation.lng },
                     destination: { lat: OFFICE_LOCATION.lat, lng: OFFICE_LOCATION.lng },
                     waypoints: [
                         {
-                            location: { lat: selectedMatch.pickupLocation.lat, lng: selectedMatch.pickupLocation.lng },
+                            location: { lat: selectedMatch.passengerLocation.lat, lng: selectedMatch.passengerLocation.lng },
                             stopover: true,
                         },
                     ],
@@ -80,8 +80,8 @@ function RouteMap({ currentUser, selectedMatch }) {
 
                         // Adjust map bounds to show the entire route
                         const bounds = new google.maps.LatLngBounds();
-                        bounds.extend({ lat: currentUser.pickupLocation.lat, lng: currentUser.pickupLocation.lng });
-                        bounds.extend({ lat: selectedMatch.pickupLocation.lat, lng: selectedMatch.pickupLocation.lng });
+                        bounds.extend({ lat: selectedMatch.driverLocation.lat, lng: selectedMatch.driverLocation.lng });
+                        bounds.extend({ lat: selectedMatch.passengerLocation.lat, lng: selectedMatch.passengerLocation.lng });
                         bounds.extend({ lat: OFFICE_LOCATION.lat, lng: OFFICE_LOCATION.lng });
                         mapInstance.fitBounds(bounds);
                     } else {
@@ -96,7 +96,7 @@ function RouteMap({ currentUser, selectedMatch }) {
         };
 
         loadMap();
-    }, [currentUser, selectedMatch]);
+    }, [currentUser, selectedMatch, OFFICE_LOCATION]);
 
     if (!currentUser?.pickupLocation || !selectedMatch?.pickupLocation) {
         return <div className="no-route-message">Please select a match to view the route.</div>;

@@ -68,8 +68,9 @@ function MatchFinder() {
                                         <h3>{match.name}</h3>
                                         <p className="match-address">{match.pickupLocation.address}</p>
                                         <div className="match-details">
-                                            <p><strong>Distance:</strong> {match.distanceToMatch.toFixed(2)} km from you</p>
-                                            <p><strong>Extra distance:</strong> {match.extraDistance.toFixed(2)} km added to your route</p>
+                                            <p><strong>Role:</strong> {match.isCurrentUserDriver ? 'You will drive' : 'They will drive'}</p>
+                                            <p><strong>Total route distance:</strong> {match.totalDistance.toFixed(2)} km</p>
+                                            <p><strong>Estimated time:</strong> {Math.round(match.totalTime)} minutes</p>
                                             <p><strong>Common days:</strong> {match.commonDays.join(', ')}</p>
                                         </div>
                                     </div>
@@ -85,7 +86,7 @@ function MatchFinder() {
                         <RouteMap currentUser={currentUser} selectedMatch={selectedMatch} />
                     ) : (
                         <div className="no-route-selected">
-                            <p>Select a match to view the route details</p>
+                            <p>Select a match to view the route</p>
                         </div>
                     )}
                 </div>

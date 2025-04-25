@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { GOOGLE_MAPS_API_KEY } from '../config';
+import { GOOGLE_MAPS_API_KEY, OFFICE_LOCATION } from '../config';
 
 function MapPicker({ initialLocation, onLocationSelect }) {
     const mapRef = useRef(null);
@@ -15,9 +15,7 @@ function MapPicker({ initialLocation, onLocationSelect }) {
         }
     }, [initialLocation]);
 
-    const initializeMap = async (
-
-    ) => {
+    const initializeMap = async () => {
         const loader = new Loader({
             apiKey: GOOGLE_MAPS_API_KEY,
             version: 'weekly',
@@ -28,7 +26,7 @@ function MapPicker({ initialLocation, onLocationSelect }) {
             const google = await loader.load();
             const center = initialLocation ?
                 { lat: initialLocation.lat, lng: initialLocation.lng } :
-                { lat: 12.9716, lng: 77.5946 }; // Default to Bangalore
+                { lat: OFFICE_LOCATION.lat, lng: OFFICE_LOCATION.lng };
 
             const mapInstance = new google.maps.Map(mapRef.current, {
                 center: center,

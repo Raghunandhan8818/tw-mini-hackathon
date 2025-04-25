@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { OFFICE_LOCATION, GOOGLE_MAPS_API_KEY } from '../config';
 import './Rides.css';
 
 const Rides = () => {
@@ -35,7 +36,7 @@ const Rides = () => {
         directionsService.route(
             {
                 origin: match.pickupLocation,
-                destination: { lat: 12.934533, lng: 77.626579 }, // Office location
+                destination: { lat: OFFICE_LOCATION.lat, lng: OFFICE_LOCATION.lng },
                 travelMode: window.google.maps.TravelMode.DRIVING,
             },
             (result, status) => {
@@ -72,10 +73,10 @@ const Rides = () => {
                 </div>
 
                 <div className="map-container">
-                    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                    <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
                         <GoogleMap
                             mapContainerStyle={{ width: '100%', height: '100%' }}
-                            center={{ lat: 12.934533, lng: 77.626579 }}
+                            center={{ lat: OFFICE_LOCATION.lat, lng: OFFICE_LOCATION.lng }}
                             zoom={12}
                         >
                             {matches.map(match => (

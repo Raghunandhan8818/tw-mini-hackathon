@@ -38,8 +38,8 @@ export function RideshareProvider({ children }) {
                 officeSchedule: ['Monday', 'Wednesday', 'Friday'],
                 pickupLocation: {
                     address: '123 Main St, Bangalore',
-                    lat: 12.9716 + 0.02,
-                    lng: 77.5946 + 0.01
+                    lat: OFFICE_LOCATION.lat + 0.02,
+                    lng: OFFICE_LOCATION.lng + 0.01
                 }
             },
             {
@@ -49,8 +49,8 @@ export function RideshareProvider({ children }) {
                 officeSchedule: ['Monday', 'Tuesday', 'Thursday'],
                 pickupLocation: {
                     address: '456 Park Ave, Bangalore',
-                    lat: 12.9716 + 0.03,
-                    lng: 77.5946 + 0.02
+                    lat: OFFICE_LOCATION.lat + 0.03,
+                    lng: OFFICE_LOCATION.lng + 0.02
                 }
             },
             {
@@ -60,8 +60,8 @@ export function RideshareProvider({ children }) {
                 officeSchedule: ['Tuesday', 'Wednesday', 'Friday'],
                 pickupLocation: {
                     address: '789 Oak St, Bangalore',
-                    lat: 12.9716 - 0.01,
-                    lng: 77.5946 - 0.02
+                    lat: OFFICE_LOCATION.lat - 0.01,
+                    lng: OFFICE_LOCATION.lng - 0.02
                 }
             },
             {
@@ -71,8 +71,8 @@ export function RideshareProvider({ children }) {
                 officeSchedule: ['Monday', 'Wednesday', 'Thursday'],
                 pickupLocation: {
                     address: '321 Pine St, Bangalore',
-                    lat: 12.9716 - 0.02,
-                    lng: 77.5946 - 0.01
+                    lat: OFFICE_LOCATION.lat - 0.02,
+                    lng: OFFICE_LOCATION.lng - 0.01
                 }
             }
         ];
@@ -114,30 +114,44 @@ export function RideshareProvider({ children }) {
         // Calculate distances and find optimal matches
         const matchesWithRouteInfo = await Promise.all(
             potentialMatches.map(async (user) => {
-                // Calculate direct route to office
-                const directRoute = await calculateRoadDistance(
-                    currentUser.pickupLocation,
-                    OFFICE_LOCATION
-                );
-
-                // Calculate route via potential match
-                const routeViaMatch = await calculateRoadDistance(
+                // Scenario 1: Current user as driver
+                const route1ToPassenger = await calculateRoadDistance(
                     currentUser.pickupLocation,
                     user.pickupLocation
                 );
 
-                const routeToOffice = await calculateRoadDistance(
+                const route1ToOffice = await calculateRoadDistance(
                     user.pickupLocation,
                     OFFICE_LOCATION
                 );
 
-                if (!directRoute || !routeViaMatch || !routeToOffice) {
+                // Scenario 2: Match as driver
+                const route2ToPassenger = await calculateRoadDistance(
+                    user.pickupLocation,
+                    currentUser.pickupLocation
+                );
+
+                const route2ToOffice = await calculateRoadDistance(
+                    currentUser.pickupLocation,
+                    OFFICE_LOCATION
+                );
+
+                if (!route1ToPassenger || !route1ToOffice || !route2ToPassenger || !route2ToOffice) {
                     return null;
                 }
 
-                // Calculate extra distance and time
-                const extraDistance = (routeViaMatch.distance + routeToOffice.distance) - directRoute.distance;
-                const extraTime = (routeViaMatch.duration + routeToOffice.duration) - directRoute.duration;
+                // Calculate total distances for both scenarios
+                const totalDistance1 = route1ToPassenger.distance + route1ToOffice.distance;
+                const totalDistance2 = route2ToPassenger.distance + route2ToOffice.distance;
+
+                // Calculate total times for both scenarios
+                const totalTime1 = route1ToPassenger.duration + route1ToOffice.duration;
+                const totalTime2 = route2ToPassenger.duration + route2ToOffice.duration;
+
+                // Choose the more efficient scenario
+                const isScenario2Better = totalDistance2 < totalDistance1;
+                const totalDistance = isScenario2Better ? totalDistance2 : totalDistance1;
+                const totalTime = isScenario2Better ? totalTime2 : totalTime1;
 
                 // Calculate common days
                 const commonDays = user.officeSchedule.filter(day =>
@@ -146,19 +160,26 @@ export function RideshareProvider({ children }) {
 
                 // Calculate match score based on multiple factors
                 const matchScore = calculateMatchScore({
-                    extraDistance,
-                    extraTime,
+                    totalDistance,
+                    totalTime,
                     commonDays: commonDays.length,
                     totalDays: currentUser.officeSchedule.length
                 });
 
                 return {
                     ...user,
-                    distanceToMatch: routeViaMatch.distance,
-                    extraDistance,
-                    extraTime,
+                    isCurrentUserDriver: !isScenario2Better, // If scenario 2 is better, match is driver
+                    driverLocation: isScenario2Better ? user.pickupLocation : currentUser.pickupLocation,
+                    passengerLocation: isScenario2Better ? currentUser.pickupLocation : user.pickupLocation,
+                    totalDistance,
+                    totalTime,
                     commonDays,
-                    matchScore
+                    matchScore,
+                    routeComparison: {
+                        scenario1Distance: totalDistance1,
+                        scenario2Distance: totalDistance2,
+                        chosenScenario: isScenario2Better ? 2 : 1
+                    }
                 };
             })
         );
@@ -203,10 +224,10 @@ export function RideshareProvider({ children }) {
     };
 
     // Calculate a match score based on multiple factors
-    const calculateMatchScore = ({ extraDistance, extraTime, commonDays, totalDays }) => {
+    const calculateMatchScore = ({ totalDistance, totalTime, commonDays, totalDays }) => {
         // Normalize factors
-        const distanceScore = Math.max(0, 1 - (extraDistance / 10)); // Penalize extra distance
-        const timeScore = Math.max(0, 1 - (extraTime / 30)); // Penalize extra time
+        const distanceScore = Math.max(0, 1 - (totalDistance / 20)); // Penalize longer distances
+        const timeScore = Math.max(0, 1 - (totalTime / 60)); // Penalize longer times
         const scheduleScore = commonDays / totalDays; // Higher score for more common days
 
         // Weight the factors
