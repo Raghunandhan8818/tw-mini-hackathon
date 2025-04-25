@@ -1,4 +1,4 @@
-export const GOOGLE_MAPS_API_KEY = 'AIzaSyB-GzC9EzNhgQMmMY7YIpL_qXf_hE37qxI';
+export const GOOGLE_MAPS_API_KEY = '';
 
 // Replace with your office location
 export const OFFICE_LOCATION = {
