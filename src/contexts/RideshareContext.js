@@ -37,9 +37,9 @@ export function RideshareProvider({ children }) {
                 email: 'john@thoughtworks.com',
                 officeSchedule: ['Monday', 'Wednesday', 'Friday'],
                 pickupLocation: {
-                    address: '123 Main St, Bangalore',
-                    lat: OFFICE_LOCATION.lat + 0.02,
-                    lng: OFFICE_LOCATION.lng + 0.01
+                    address: 'MG Road Metro Station, Bangalore',
+                    lat: 12.9758,
+                    lng: 77.6049
                 }
             },
             {
@@ -48,9 +48,9 @@ export function RideshareProvider({ children }) {
                 email: 'jane@thoughtworks.com',
                 officeSchedule: ['Monday', 'Tuesday', 'Thursday'],
                 pickupLocation: {
-                    address: '456 Park Ave, Bangalore',
-                    lat: OFFICE_LOCATION.lat + 0.03,
-                    lng: OFFICE_LOCATION.lng + 0.02
+                    address: 'Indiranagar Metro Station, Bangalore',
+                    lat: 12.9784,
+                    lng: 77.6408
                 }
             },
             {
@@ -59,9 +59,9 @@ export function RideshareProvider({ children }) {
                 email: 'bob@thoughtworks.com',
                 officeSchedule: ['Tuesday', 'Wednesday', 'Friday'],
                 pickupLocation: {
-                    address: '789 Oak St, Bangalore',
-                    lat: OFFICE_LOCATION.lat - 0.01,
-                    lng: OFFICE_LOCATION.lng - 0.02
+                    address: 'Jayanagar Metro Station, Bangalore',
+                    lat: 12.9279,
+                    lng: 77.5831
                 }
             },
             {
@@ -70,9 +70,53 @@ export function RideshareProvider({ children }) {
                 email: 'alice@thoughtworks.com',
                 officeSchedule: ['Monday', 'Wednesday', 'Thursday'],
                 pickupLocation: {
-                    address: '321 Pine St, Bangalore',
-                    lat: OFFICE_LOCATION.lat - 0.02,
-                    lng: OFFICE_LOCATION.lng - 0.01
+                    address: 'Banashankari Metro Station, Bangalore',
+                    lat: 12.9254,
+                    lng: 77.5468
+                }
+            },
+            {
+                id: '5',
+                name: 'Mike Wilson',
+                email: 'mike@thoughtworks.com',
+                officeSchedule: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                pickupLocation: {
+                    address: 'Majestic Metro Station, Bangalore',
+                    lat: 12.9774,
+                    lng: 77.5703
+                }
+            },
+            {
+                id: '6',
+                name: 'Sarah Davis',
+                email: 'sarah@thoughtworks.com',
+                officeSchedule: ['Monday', 'Wednesday', 'Friday'],
+                pickupLocation: {
+                    address: 'Vijayanagar Metro Station, Bangalore',
+                    lat: 12.9704,
+                    lng: 77.5486
+                }
+            },
+            {
+                id: '7',
+                name: 'David Lee',
+                email: 'david@thoughtworks.com',
+                officeSchedule: ['Tuesday', 'Thursday', 'Friday'],
+                pickupLocation: {
+                    address: 'Yeshwantpur Metro Station, Bangalore',
+                    lat: 13.0259,
+                    lng: 77.5486
+                }
+            },
+            {
+                id: '8',
+                name: 'Emma Taylor',
+                email: 'emma@thoughtworks.com',
+                officeSchedule: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+                pickupLocation: {
+                    address: 'KR Puram Metro Station, Bangalore',
+                    lat: 13.0068,
+                    lng: 77.6952
                 }
             }
         ];
