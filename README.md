@@ -27,4 +27,17 @@ This is to ensure that no personal data if revealed without consent. Once the us
 
 
 
-### Resources
+### Setup Instructions
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Create a `.env` file with your Google Maps API key
+4. Start the development server: `npm start`
+
+### Future Enhancements
+1. Integration with real backend API
+2. Real-time notifications
+3. User ratings and feedback system
+4. Advanced scheduling features
+5. Further optimization of routes 
+6. Cab sharing beyond two people
