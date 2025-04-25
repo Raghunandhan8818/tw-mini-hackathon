@@ -37,7 +37,8 @@ This is to ensure that no personal data if revealed without consent. Once the us
 ### Future Enhancements
 1. Integration with real backend API
 2. Real-time notifications
-3. User ratings and feedback system
+3. User ratings and feedback system for the application
 4. Advanced scheduling features
 5. Further optimization of routes 
 6. Cab sharing beyond two people
+7. Integrate cab applications(Namma Yatri, Ola, Uber) to allow users to plan cab pooling
